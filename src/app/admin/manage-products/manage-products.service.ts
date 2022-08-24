@@ -2,9 +2,13 @@ import { Injectable, Injector } from '@angular/core';
 import { EMPTY, Observable } from 'rxjs';
 import { ApiService } from '../../core/api.service';
 import { switchMap } from 'rxjs/operators';
+import { HttpHeaders } from '@angular/common/http';
+import { AuthService } from '../../core/auth.service';
 
 @Injectable()
 export class ManageProductsService extends ApiService {
+  private readonly authService: AuthService = this.injector.get(AuthService);
+
   constructor(injector: Injector) {
     super(injector);
   }
@@ -36,6 +40,10 @@ export class ManageProductsService extends ApiService {
       params: {
         name: fileName,
       },
+      headers: new HttpHeaders().set(
+        'Authorization',
+        `Basic ${this.authService.getToken()}`
+      ),
     });
   }
 }
